@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getTrip } from '../utils/storage.js'
 import GeneratedMemoryCard from '../components/GeneratedMemoryCard.jsx'
 import MemorySpotPage from '../components/MemorySpotPage.jsx'
 import KeepsakeCard from '../components/KeepsakeCard.jsx'
 import MapRoutePreview from '../components/MapRoutePreview.jsx'
+import ShareModal from '../components/ShareModal.jsx'
 import { composeLocationMemory, composeMemorySpot } from '../utils/mockGenerator.js'
 
 export default function TravelJournalPreviewPage() {
@@ -45,6 +46,12 @@ export default function TravelJournalPreviewPage() {
   }, [trip])
 
   const [idx, setIdx] = useState(0)
+  const [shareOpen, setShareOpen] = useState(false)
+  const exportRefs = useRef([])
+  const setExportRef = (i) => (el) => {
+    exportRefs.current[i] = el
+  }
+  const getExportElements = () => exportRefs.current.filter(Boolean)
 
   if (!trip) {
     return (
@@ -82,7 +89,7 @@ export default function TravelJournalPreviewPage() {
         <div className="flex items-center justify-between mb-3">
           <button onClick={() => nav(`/trip/${tripId}`)} className="btn-ghost">← 返回工作台</button>
           <div className="text-sm text-muted">整本手账预览</div>
-          <button onClick={() => alert('分享功能后续接入～')} className="btn-ghost">↗ 分享</button>
+          <button onClick={() => setShareOpen(true)} className="btn-ghost">↗ 分享</button>
         </div>
 
         <div className="grid md:grid-cols-[260px_1fr] gap-4">
@@ -138,6 +145,38 @@ export default function TravelJournalPreviewPage() {
           </div>
         </div>
       </div>
+
+      {/* Hidden offscreen container used by ShareModal to capture every page */}
+      <div
+        aria-hidden
+        style={{
+          position: 'fixed',
+          left: '-100000px',
+          top: 0,
+          width: '900px',
+          pointerEvents: 'none',
+          zIndex: -1
+        }}
+      >
+        {pages.map((p, i) => (
+          <div
+            key={i}
+            ref={setExportRef(i)}
+            className="paper-card p-8 mb-6"
+            style={{ width: '900px', backgroundColor: '#fff8ec' }}
+          >
+            <BookPage page={p} trip={trip} keepsakes={allKeepsakes} />
+          </div>
+        ))}
+      </div>
+
+      {shareOpen && (
+        <ShareModal
+          trip={trip}
+          getElements={getExportElements}
+          onClose={() => setShareOpen(false)}
+        />
+      )}
     </div>
   )
 }
