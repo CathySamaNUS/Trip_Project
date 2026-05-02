@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body {
+  font-family: '"PingFang SC"', 'Helvetica Neue', system-ui, sans-serif;
+  color: #3a3530;
+  background-color: #fdfaf3;
+  background-image:
+    radial-gradient(rgba(180,160,120,0.10) 1px, transparent 1px),
+    radial-gradient(rgba(180,160,120,0.06) 1px, transparent 1px);
+  background-size: 28px 28px, 14px 14px;
+  background-position: 0 0, 7px 7px;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .paper-card {
+    @apply rounded-2xl bg-paper2 shadow-paper border border-[#efe4cc];
+  }
+  .sticker {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer select-none transition;
+  }
+  .sticker-default {
+    @apply bg-white border border-[#e8dec2] text-ink hover:bg-paper;
+  }
+  .sticker-active {
+    @apply bg-rose text-white border border-rose shadow-soft;
+  }
+  .sticker-mood {
+    @apply bg-cream border border-[#f1d68a] text-ink;
+  }
+  .sticker-mood-active {
+    @apply bg-rose text-white border-rose;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full bg-rose text-white font-medium shadow-soft hover:bg-rose2 active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-ink border border-[#e8dec2] hover:bg-paper transition;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-3 py-1.5 rounded-full text-muted hover:text-ink hover:bg-paper transition text-sm;
+  }
+  .field {
+    @apply w-full bg-white border border-[#e8dec2] rounded-xl px-4 py-3 text-ink placeholder:text-[#bbb1a0] focus:outline-none focus:ring-2 focus:ring-rose/40 focus:border-rose/40 transition;
+  }
+  .label {
+    @apply text-sm text-muted mb-2 block;
+  }
+  .tape {
+    position: relative;
+  }
+  .tape::before {
+    content: '';
+    position: absolute;
+    top: -10px; left: 24px;
+    width: 70px; height: 18px;
+    background: rgba(255, 220, 180, 0.7);
+    transform: rotate(-4deg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 2px;
+  }
+  .polaroid {
+    @apply bg-white p-2 pb-6 shadow-paper rounded-md;
+  }
+}
+
+/* simple scrollbar */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: #e8dec2; border-radius: 999px; }
+*::-webkit-scrollbar-track { background: transparent; }
