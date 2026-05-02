@@ -1,6 +1,11 @@
 import { useState } from 'react'
-import { exportPagesToPDF, exportPagesToLongImage, exportTripJSON } from '../utils/exporter.js'
-import { PrimaryButton, SecondaryButton } from './Buttons.jsx'
+import {
+  exportPagesToPDF,
+  exportPagesToLongImage,
+  exportTripJSON,
+  encodeTripToShareUrl
+} from '../utils/exporter.js'
+import { SecondaryButton } from './Buttons.jsx'
 
 const Option = ({ icon, title, desc, onClick, disabled }) => (
   <button
@@ -21,8 +26,10 @@ const Option = ({ icon, title, desc, onClick, disabled }) => (
 )
 
 export default function ShareModal({ trip, getElements, onClose }) {
-  const [busy, setBusy] = useState(null) // 'pdf' | 'jpg' | 'json' | null
+  const [busy, setBusy] = useState(null) // 'pdf' | 'jpg' | 'json' | 'link' | null
   const [error, setError] = useState('')
+  const [shareUrl, setShareUrl] = useState('')
+  const [copied, setCopied] = useState(false)
 
   const run = async (kind, fn) => {
     setBusy(kind)
@@ -51,6 +58,21 @@ export default function ShareModal({ trip, getElements, onClose }) {
     run('json', async () => {
       exportTripJSON(trip)
     })
+  const onLink = () =>
+    run('link', async () => {
+      const url = encodeTripToShareUrl(trip)
+      setShareUrl(url)
+      try {
+        await navigator.clipboard.writeText(url)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2500)
+      } catch {
+        // user can copy manually from the textarea
+      }
+    })
+
+  const sizeKB = shareUrl ? Math.round(shareUrl.length / 1024) : 0
+  const tooLong = sizeKB > 60
 
   return (
     <div
@@ -70,6 +92,13 @@ export default function ShareModal({ trip, getElements, onClose }) {
         </p>
 
         <div className="space-y-3">
+          <Option
+            icon="🔗"
+            title={busy === 'link' ? '正在生成链接…' : copied ? '✓ 链接已复制' : '生成公开链接'}
+            desc="把这本手账编进链接，朋友打开链接就能看。链接里不含照片，文字与排版完整保留。"
+            disabled={!!busy}
+            onClick={onLink}
+          />
           <Option
             icon="📄"
             title={busy === 'pdf' ? '正在生成 PDF…' : '导出 PDF'}
@@ -92,6 +121,52 @@ export default function ShareModal({ trip, getElements, onClose }) {
             onClick={onJSON}
           />
         </div>
+
+        {shareUrl && (
+          <div className="mt-4 paper-card p-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium text-ink">
+                {copied ? '✓ 已复制到剪贴板' : '链接已生成'}
+              </div>
+              <div className={`text-xs ${tooLong ? 'text-rose' : 'text-muted'}`}>
+                {sizeKB} KB {tooLong && '(可能太长)'}
+              </div>
+            </div>
+            <textarea
+              readOnly
+              value={shareUrl}
+              onClick={(e) => e.target.select()}
+              className="field text-xs font-mono break-all min-h-[64px]"
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                className="btn-secondary !px-4 !py-2 text-sm flex-1"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(shareUrl)
+                    setCopied(true)
+                    setTimeout(() => setCopied(false), 2500)
+                  } catch {}
+                }}
+              >
+                {copied ? '已复制 ✓' : '复制链接'}
+              </button>
+              <a
+                href={shareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-secondary !px-4 !py-2 text-sm flex-1 text-center"
+              >
+                打开预览
+              </a>
+            </div>
+            {tooLong && (
+              <div className="text-xs text-rose mt-2 leading-5">
+                链接过长，部分聊天工具可能截断。建议精简内容，或改用 PDF / JSON 分享。
+              </div>
+            )}
+          </div>
+        )}
 
         {error && (
           <div className="mt-3 text-sm text-rose bg-rose/10 px-3 py-2 rounded-md">
