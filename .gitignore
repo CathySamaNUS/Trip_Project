@@ -4,3 +4,6 @@ dist
 *.log
 .vite
 .claude/
+.env
+.env.local
+.env.*.local

@@ -8,8 +8,10 @@ import LocationMemoryInputPage from './pages/LocationMemoryInputPage.jsx'
 import MemorySpotManagerPage from './pages/MemorySpotManagerPage.jsx'
 import GeneratedLocationPreviewPage from './pages/GeneratedLocationPreviewPage.jsx'
 import TravelJournalPreviewPage from './pages/TravelJournalPreviewPage.jsx'
+import LoginPage from './pages/LoginPage.jsx'
 import { ToastProvider, useToast } from './components/Toast.jsx'
 import { LightboxProvider } from './components/Lightbox.jsx'
+import { AuthProvider } from './lib/auth.jsx'
 import { seedOnce } from './utils/sampleData.js'
 import { saveTrip } from './utils/storage.js'
 import { decodeTripFromHash, clearShareHash } from './utils/exporter.js'
@@ -48,11 +50,13 @@ export default function App() {
   }, [])
 
   return (
+    <AuthProvider>
     <ToastProvider>
       <LightboxProvider>
         <ShareImporter />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/create-trip" element={<CreateTripPage />} />
           <Route path="/trip/:tripId" element={<TripDashboardPage />} />
           <Route path="/trip/:tripId/add-location" element={<AddLocationPage />} />
@@ -73,5 +77,6 @@ export default function App() {
         </Routes>
       </LightboxProvider>
     </ToastProvider>
+    </AuthProvider>
   )
 }

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { PrimaryButton, SecondaryButton } from '../components/Buttons.jsx'
 import { ensureSampleTrip } from '../utils/sampleData.js'
+import { useAuth } from '../lib/auth.jsx'
 
 const features = [
   { icon: '🗺️', title: '地点地图', desc: '用地点串起整趟旅行' },
@@ -11,6 +12,7 @@ const features = [
 
 export default function HomePage() {
   const nav = useNavigate()
+  const { user, signOut, configured } = useAuth()
 
   const onSample = () => {
     const id = ensureSampleTrip()
@@ -19,6 +21,24 @@ export default function HomePage() {
 
   return (
     <div className="min-h-full max-w-5xl mx-auto px-5 py-10 md:py-14">
+      <div className="flex items-center justify-end mb-4 gap-2">
+        {user ? (
+          <>
+            <span className="text-sm text-muted">
+              👋 {user.email}
+            </span>
+            <button onClick={signOut} className="btn-ghost">退出</button>
+          </>
+        ) : (
+          <button
+            onClick={() => nav('/login')}
+            className="btn-secondary !py-2 !px-4 text-sm"
+            title={configured ? '邮箱登录' : 'Supabase 未配置，登录暂不可用'}
+          >
+            登录 / 注册
+          </button>
+        )}
+      </div>
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="paper-card p-7 md:p-9 relative tape">
           <div className="text-xs text-muted tracking-widest mb-2">📷 旅行回忆手账生成器</div>
