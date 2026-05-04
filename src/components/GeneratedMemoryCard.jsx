@@ -12,11 +12,8 @@ function SectionHeading({ children }) {
 
 function ClickablePhoto({ photo, photos, index, className = '', size = 'md' }) {
   const { open } = useLightbox()
-  const sizes = {
-    sm: 'w-20 h-20',
-    md: 'w-32 h-32',
-    lg: 'w-full h-56'
-  }
+  const isLg = size === 'lg'
+  const thumbHeight = size === 'sm' ? 'h-20' : 'h-32'
   return (
     <button
       type="button"
@@ -27,10 +24,14 @@ function ClickablePhoto({ photo, photos, index, className = '', size = 'md' }) {
       <img
         src={photo.url}
         alt={photo.name || ''}
-        className={`${sizes[size]} object-cover rounded-sm`}
+        className={
+          isLg
+            ? 'w-full h-auto max-h-[70vh] rounded-sm'
+            : `${thumbHeight} w-auto rounded-sm`
+        }
       />
-      {photo.name && size !== 'lg' && (
-        <div className="text-center text-[10px] text-muted mt-1 truncate w-full">
+      {photo.name && !isLg && (
+        <div className="text-center text-[10px] text-muted mt-1 truncate max-w-[8rem]">
           {photo.name}
         </div>
       )}

@@ -21,8 +21,7 @@ export const buildSampleTrip = () => {
     order: 1,
     mapLocation: null,
     photos: [
-      { id: uid('p'), url: placeholder('minsu1'), name: '民宿门口', isCover: true },
-      { id: uid('p'), url: placeholder('minsu2'), name: '阳台' }
+      { id: uid('p'), url: '/photos/mountain.jpeg', name: '阳台外的山', isCover: true }
     ],
     memoryInput: {
       oneLineMemory: '到民宿时下着小雨，老板娘留了一盏灯。',
@@ -49,9 +48,8 @@ export const buildSampleTrip = () => {
     order: 2,
     mapLocation: null,
     photos: [
-      { id: uid('p'), url: placeholder('shrine1'), name: '神社路', isCover: true },
-      { id: uid('p'), url: placeholder('shrine2') },
-      { id: uid('p'), url: placeholder('shrine3') }
+      { id: 'p_shrine_temple', url: '/photos/temple.jpeg', name: '雨里的神社', isCover: true },
+      { id: 'p_shrine_rail', url: '/photos/rail.jpeg', name: '走过的小路' }
     ],
     memoryInput: {
       oneLineMemory: '一路在雨里走，灯笼一盏一盏亮起来。',
@@ -68,7 +66,7 @@ export const buildSampleTrip = () => {
         id: uid('ms'),
         title: '走错的那一段',
         shortText: '走错的小巷里有一只在屋檐下避雨的小狗。',
-        photoIds: [],
+        photoIds: ['p_shrine_rail'],
         moodTags: ['治愈'],
         keepsakes: [],
         people: [],
@@ -89,8 +87,7 @@ export const buildSampleTrip = () => {
     order: 3,
     mapLocation: null,
     photos: [
-      { id: uid('p'), url: placeholder('temple1'), isCover: true },
-      { id: uid('p'), url: placeholder('temple2') }
+      { id: uid('p'), url: '/photos/neko2.jpeg', name: '庙里遇到的猫', isCover: true }
     ],
     memoryInput: {
       oneLineMemory: '香火气很重，外面雨刚停。',
@@ -117,11 +114,9 @@ export const buildSampleTrip = () => {
     order: 4,
     mapLocation: null,
     photos: [
-      { id: uid('p'), url: placeholder('congyou1'), name: '店门口', isCover: true },
-      { id: uid('p'), url: placeholder('congyou2'), name: '店里的猫' },
-      { id: uid('p'), url: placeholder('congyou3'), name: '小挂件' },
-      { id: uid('p'), url: placeholder('congyou4'), name: '一杯茶' },
-      { id: uid('p'), url: placeholder('congyou5'), name: '彩虹招牌' }
+      { id: 'p_congyou_door', url: '/photos/congyoubing.jpeg', name: '店门口', isCover: true },
+      { id: 'p_congyou_cat', url: '/photos/neko3.jpeg', name: '店里的猫' },
+      { id: 'p_congyou_tea', url: '/photos/tea.jpeg', name: '老板请的茶' }
     ],
     memoryInput: {
       oneLineMemory: '老板请我们喝茶，店里有很多猫，我买了一个小挂件。',
@@ -148,7 +143,7 @@ export const buildSampleTrip = () => {
         id: uid('ms'),
         title: '老板请茶',
         shortText: '茶杯放在桌上，热气慢慢升起来，外面的雨声突然远了一点。',
-        photoIds: [],
+        photoIds: ['p_congyou_tea'],
         moodTags: ['温暖'],
         keepsakes: ['老板请的茶'],
         people: [],
@@ -158,7 +153,7 @@ export const buildSampleTrip = () => {
         id: uid('ms'),
         title: '店里的猫',
         shortText: '几只猫懒懒地窝在角落，好像早就习惯了旅人带着雨气进门。',
-        photoIds: [],
+        photoIds: ['p_congyou_cat'],
         moodTags: ['治愈'],
         keepsakes: [],
         people: [],
@@ -168,7 +163,7 @@ export const buildSampleTrip = () => {
         id: uid('ms'),
         title: '买下小挂件',
         shortText: '你买了一个小挂件，像是把这段绕远的雨天路线轻轻收起来。',
-        photoIds: [],
+        photoIds: ['p_congyou_door'],
         moodTags: ['惊喜'],
         keepsakes: ['葱油饼店的小挂件'],
         people: [],
@@ -195,10 +190,7 @@ export const buildSampleTrip = () => {
 }
 
 export const ensureSampleTrip = () => {
-  const all = getAllTrips()
-  if (!all.find((t) => t.id === SAMPLE_TRIP_ID)) {
-    saveTrip(buildSampleTrip())
-  }
+  saveTrip(buildSampleTrip())
   return SAMPLE_TRIP_ID
 }
 
