@@ -9,6 +9,7 @@ import MemorySpotManagerPage from './pages/MemorySpotManagerPage.jsx'
 import GeneratedLocationPreviewPage from './pages/GeneratedLocationPreviewPage.jsx'
 import TravelJournalPreviewPage from './pages/TravelJournalPreviewPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx'
 import { ToastProvider, useToast } from './components/Toast.jsx'
 import { LightboxProvider } from './components/Lightbox.jsx'
 import { AuthProvider } from './lib/auth.jsx'
@@ -57,6 +58,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/create-trip" element={<CreateTripPage />} />
           <Route path="/trip/:tripId" element={<TripDashboardPage />} />
           <Route path="/trip/:tripId/add-location" element={<AddLocationPage />} />
